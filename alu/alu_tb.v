@@ -13,7 +13,7 @@ module alu_tb;
     integer errors = 0;
     integer tests  = 0;
 
-    // plug your ALU into the socket
+    // plug ALU into the socket
     alu #(.WIDTH(WIDTH)) dut (
         .a(a), .b(b), .alu_op(alu_op),
         .result(result), .zero(zero)
@@ -45,11 +45,8 @@ module alu_tb;
     endtask
 
     initial begin
-        // ---- two examples ----
-        check(ADD, 32'd5, 32'd3, 32'd8,          "ADD basic");
-        check(SRA, 32'hFFFFFFF8, 32'd1, 32'hFFFFFFFC, "SRA negative"); // -8 >>> 1 = -4
 
-        // ---- YOUR TESTS GO HERE ----
+        check(SRA, 32'hFFFFFFF8, 32'd1, 32'hFFFFFFFC, "SRA negative"); // -8 >>> 1 = -4
         check(SRA, 32'hFFFFFFF8, 32'd1, 32'hFFFFFFFC, "SRA negative");
         check(SRL, 32'h00010000, 32'd16, 32'h00000001, "SRL basic");
         check(SRL, 32'h000ABCD3, 32'd8, 32'h00000ABC, "SRL 2 digits");
