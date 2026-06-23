@@ -38,7 +38,7 @@ module regfile_tb;
     task check_read1(input [4:0] addr, input [31:0] expected, input [127:0] name);
     begin  
         ra1 = addr;
-        #1; // combinational read settling
+        #1; 
         tests = tests + 1;
         if (rd1 !== expected) begin
             errors = errors + 1;
@@ -60,11 +60,9 @@ module regfile_tb;
     endtask
 
     initial begin 
-         // ===== EXAMPLE (done for you, so you see the pattern) =====
-        write_reg(5'd3, 32'd42);                      // write 42 into x3
-        check_read1(5'd3, 32'd42, "write/read x3");   // read x3 back, expect 42
-
-        // ===== YOUR TESTS GO HERE =====
+         // example
+        write_reg(5'd3, 32'd42);                     
+        check_read1(5'd3, 32'd42, "write/read x3");   
 
         // Test 1
         write_reg(5'd6, 32'd35);
@@ -89,7 +87,7 @@ module regfile_tb;
         write_reg(5'd31, 32'd50);
         check_read1(5'd31, 32'd50, "overwrite x31");
 
-        // ===== summary =====
+       
         if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
         else             $display("%0d/%0d TESTS FAILED", errors, tests);
         $finish;
