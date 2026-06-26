@@ -1,0 +1,46 @@
+`timescale 1ns/1ps
+
+module imm_gen_tb;
+
+    reg  [31:0] instr;
+    wire [31:0] out;
+
+    integer errors = 0;
+    integer tests  = 0;
+
+    imm_gen dut (.instr(instr), .out(out));
+
+    task check(input [31:0] expected, input [127:0] name);
+    begin
+        #1;
+        tests = tests + 1;
+        if (out !== expected) begin
+            errors = errors + 1;
+            $display("FAIL [%0s]: got %h, expected %h", name, out, expected);
+        end
+    end
+    endtask
+
+    initial begin
+        // Test 1
+        instr = {12'd10, 13'b0, 7'b0010011};
+        check(32'd10, "I-type positive");
+
+        // Test 2
+        instr = {12'hFFF, 13'b0, 7'b0010011};
+        check(32'hFFFFFFFF, "I-type negative");
+
+        // Test 3
+        instr = {7'd5, 13'b0, 5'd9, 7'b0100011};
+        check(32'd169, "S-type positive");
+
+        // Test 4
+        instr = {7'b1000001, 13'b0, 5'd3, 7'b0100011};
+        check(32'hFFFFF823, "S-type negative");
+
+        if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
+        else             $display("%0d/%0d TESTS FAILED", errors, tests);
+        $finish;
+    end
+
+endmodule
