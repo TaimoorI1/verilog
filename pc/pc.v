@@ -8,8 +8,8 @@ module pc (
     // clocked update:
     always @(posedge clk)
         if (reset) 
-            pc <= 32'b0; // reset high -> pc <= address 0
+            pc <= 32'b0; // reset high, pc <= address 0
         else
-            pc <= next_pc; // otherwise  -> pc <= next_pc
+            pc <= next_pc; // otherwise pc <= next_pc
 
 endmodule

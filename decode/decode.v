@@ -5,7 +5,8 @@ module decode (
     output [2:0]  funct3,
     output [4:0]  rs1,
     output [4:0]  rs2,
-    output [6:0]  funct7
+    output [6:0]  funct7,
+    output [31:0] imm    // I-type immediate
 );
 
     // slice each field out of instr by bit position, combinational
@@ -15,5 +16,7 @@ module decode (
     assign rs1 = instr[19:15];
     assign rs2 = instr[24:20];
     assign funct7 = instr[31:25];
+
+    assign imm = {{20{instr[31]}}, instr[31:20]};
 
 endmodule
