@@ -1,8 +1,8 @@
-module datapath_tb;
+module cpu_tb;
     reg clk;
     reg reset;
 
-    datapath dut (
+    cpu dut (
         .clk(clk),
         .reset(reset)
     );

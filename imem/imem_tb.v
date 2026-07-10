@@ -34,7 +34,7 @@ module imem_tb;
         // drive an address, wait a tick for the combinational read, check
         addr = 32'd0; #1; check(instr, 32'hAAAAAAAA);  
         addr = 32'd4; #1; check(instr, 32'hBBBBBBBB);
-         addr = 32'd8; #1; check(instr,32'hCCCCCCCC);
+        addr = 32'd8; #1; check(instr, 32'hCCCCCCCC);
 
 
         $display("");

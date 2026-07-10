@@ -5,19 +5,18 @@ module fetch (
     output     [31:0] instr      // instruction fetched this cycle
 );
 
-    // ── internal wires: signals that run BETWEEN the bricks ──
+    // internal wires: signals that run BETWEEN the bricks
     wire [31:0] pc_plus_4;
 
-    // ── PC brick ──
-    // its next_pc input is fed by the adder. that's the loop.
+    // its next_pc input is fed by the adder
     pc pc_inst (
         .clk     (clk),
         .reset   (reset),
-        .next_pc (pc_plus_4),    // <-- next address comes from the adder
+        .next_pc (pc_plus_4),    // next address comes from the adder
         .pc      (pc)
     );
 
-    // ── instruction memory brick ──
+    // instruction memory brick 
     imem imem_inst (
         .addr  (pc),
         .instr (instr)
