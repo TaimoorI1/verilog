@@ -30,8 +30,7 @@ decode decode_inst (
     .funct3(funct3),
     .rs1(rs1),
     .rs2(rs2),
-    .funct7(funct7),
-    .imm(imm)
+    .funct7(funct7)
 );
 
 
@@ -57,6 +56,11 @@ alu alu_inst (
     .b(alu_b),
     .alu_op(4'b0000),
     .result(alu_result)
+);
+
+imm_gen imm_gen_inst (
+    .instr(instr),
+    .out(imm)
 );
 
 endmodule
