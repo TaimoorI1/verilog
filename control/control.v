@@ -19,9 +19,14 @@ always @(*) begin
             reg_write = 1'b1;
             alu_src = 1'b0;
             case (funct3)
-                3'b000 : alu_control = funct7_5 ? 4'b0001 : 4'b0000;
-                3'b110 : alu_control = 4'b0011;
-                3'b111 : alu_control = 4'b0010;
+                3'b000 : alu_control = funct7_5 ? 4'b0001 : 4'b0000; // ADD : SUB
+                3'b111 : alu_control = 4'b0010; // AND 
+                3'b110 : alu_control = 4'b0011; // OR
+                3'b100 : alu_control = 4'b0100; // XOR
+                3'b010 : alu_control = 4'b0101; // SLT
+                3'b001 : alu_control = 4'b0110; // SLL
+                3'b101 : alu_control = funct7_5 ? 4'b1000 : 4'b0111; // SRA : SRL
+                3'b011 : alu_control = 4'b1100; // SLTU
             endcase
         end
 
@@ -30,7 +35,13 @@ always @(*) begin
             reg_write = 1'b1;
             alu_src = 1'b1;
             case (funct3)
-                3'b000 : alu_control = 4'b0000;
+                3'b000 : alu_control = 4'b0000; // ADDI
+                3'b110 : alu_control = 4'b0011; // ORI
+                3'b100 : alu_control = 4'b0100; // XORI
+                3'b010 : alu_control = 4'b0101; // SLTI
+                3'b001 : alu_control = 4'b0110; // SLLI
+                3'b101 : alu_control = funct7_5 ? 4'b1000 : 4'b0111; // SRAI : SRLI
+                3'b011 : alu_control = 4'b1100; // SLTIU
             endcase
         end
    endcase

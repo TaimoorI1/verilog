@@ -22,7 +22,8 @@ module alu_tb;
     // same encodings as the design
     localparam ADD = 4'b0000, SUB = 4'b0001, AND_ = 4'b0010,
                OR_ = 4'b0011, XOR_ = 4'b0100, SLT = 4'b0101,
-               SLL = 4'b0110, SRL = 4'b0111, SRA = 4'b1000;
+               SLL = 4'b0110, SRL = 4'b0111, SRA = 4'b1000,
+               SLTU = 4'b1100;
 
     // the checker: drive inputs, wait, compare against expected
     task check(
@@ -63,8 +64,9 @@ module alu_tb;
         check(SUB, 32'd4, 32'd5, 32'hFFFFFFFF, "SUB negative");
         check(ADD, 32'd7, 32'd2, 32'd9, "ADD basic");
         check(ADD, 32'hA, 32'h6, 32'h10, "ADD basic");
+        check(SLTU, 32'hFFFFFFFF, 32'd1, 32'b0, "SLT unsigned");
+        check(SLTU, 32'd1, 32'hFFFFFFFF, 32'b1, "SLT unsigned");
         
-        // summary
         if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
         else             $display("%0d/%0d TESTS FAILED", errors, tests);
         $finish;

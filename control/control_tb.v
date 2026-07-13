@@ -38,26 +38,98 @@ endtask
 
 initial begin  
     errors = 0; tests = 0;
+
     // ADD
     opcode = 7'b0110011; funct3 = 3'b000; funct7_5 = 1'b0;
     #1;
     check(4'b0000, 1'b0, 1'b1);
+
     // SUB
     opcode = 7'b0110011; funct3 = 3'b000; funct7_5 = 1'b1;
     #1;
     check(4'b0001, 1'b0, 1'b1);
-    // OR
-    opcode = 7'b0110011; funct3 = 3'b110; funct7_5 = 1'b0;
-    #1;
-    check(4'b0011, 1'b0, 1'b1);
+
     // AND
     opcode = 7'b0110011; funct3 = 3'b111; funct7_5 = 1'b0;
     #1;
     check(4'b0010, 1'b0, 1'b1);
+
+    // OR
+    opcode = 7'b0110011; funct3 = 3'b110; funct7_5 = 1'b0;
+    #1;
+    check(4'b0011, 1'b0, 1'b1);
+
+    // XOR
+    opcode = 7'b0110011; funct3 = 3'b100; funct7_5 = 1'b0;
+    #1;
+    check(4'b0100, 1'b0, 1'b1);
+
+    // SLT  
+    opcode = 7'b0110011; funct3 = 3'b010; funct7_5 = 1'b0;
+    #1;
+    check(4'b0101, 1'b0, 1'b1);  
+
+    // SLL   
+    opcode = 7'b0110011; funct3 = 3'b001; funct7_5 = 1'b0;
+    #1;
+    check(4'b0110, 1'b0, 1'b1);  
+
+    // SRL
+    opcode = 7'b0110011; funct3 = 3'b101; funct7_5 = 1'b0;
+    #1;
+    check(4'b0111, 1'b0, 1'b1);  
+
+    // SRA
+    opcode = 7'b0110011; funct3 = 3'b101; funct7_5 = 1'b1;
+    #1;
+    check(4'b1000, 1'b0, 1'b1);  
+
+    // SLTU 
+    opcode = 7'b0110011; funct3 = 3'b011; funct7_5 = 1'b0;
+    #1;
+    check(4'b1100, 1'b0, 1'b1);
+
     // ADDI
-    opcode = 7'b0010011; funct3 = 3'b000;
+    opcode = 7'b0010011; funct3 = 3'b000; funct7_5 = 1'b1;
     #1;
     check(4'b0000, 1'b1, 1'b1);
+
+    // ORI
+    opcode = 7'b0010011; funct3 = 3'b110;
+    #1;
+    check(4'b0011, 1'b1, 1'b1);
+
+    // XORI
+    opcode = 7'b0010011; funct3 = 3'b100;
+    #1;
+    check(4'b0100, 1'b1, 1'b1);
+
+    // SLTI
+    opcode = 7'b0010011; funct3 = 3'b010;
+    #1;
+    check(4'b0101, 1'b1, 1'b1);
+
+    // SLLI
+    opcode = 7'b0010011; funct3 = 3'b001; funct7_5 = 1'b0;
+    #1;
+    check(4'b0110, 1'b1, 1'b1);
+
+    // SRLI
+    opcode = 7'b0010011; funct3 = 3'b101; funct7_5 = 1'b0;
+    #1;
+    check(4'b0111, 1'b1, 1'b1);
+
+    // SRAI 
+    opcode = 7'b0010011; funct3 = 3'b101; funct7_5 =  1'b1;
+    #1;
+    check(4'b1000, 1'b1, 1'b1);
+
+    // SLTIU
+    opcode = 7'b0010011; funct3 = 3'b011;
+    #1;
+    check(4'b1100, 1'b1, 1'b1);
+
+
     // garbage case ; expect default
      opcode = 7'b1111111; funct3 = 3'b000; funct7_5 = 1'b0;
     #1;

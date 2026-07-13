@@ -17,6 +17,7 @@ module alu #(
     localparam SLL = 4'b0110;
     localparam SRL = 4'b0111;
     localparam SRA = 4'b1000;
+    localparam SLTU = 4'b1100;
 
     always @(*) begin
         case (alu_op)
@@ -29,6 +30,7 @@ module alu #(
             SLL: result = a << b[4:0];
             SRL: result = a >> b[4:0];
             SRA: result = $signed(a) >>> b[4:0]; // arithmetic: preserves sign bit
+            SLTU: result = a < b;
             default: result = {WIDTH{1'b0}};
         endcase
     end
