@@ -9,6 +9,7 @@ module imm_gen(
         case (opcode)
             7'b0010011: out = {{20{instr[31]}}, instr[31:20]};
             7'b0100011: out = {{20{instr[31]}}, instr[31:25], instr[11:7]};
+            7'b0000011: out = {{20{instr[31]}}, instr[31:20]};
             default: out = 32'b0;
         endcase
     end 

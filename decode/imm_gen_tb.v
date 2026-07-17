@@ -38,6 +38,19 @@ module imm_gen_tb;
         instr = {7'b1000001, 13'b0, 5'd3, 7'b0100011};
         check(32'hFFFFF823, "S-type negative");
 
+        // Test 5
+        instr = {12'hFFC, 13'b0, 7'b0000011};
+        check(32'hFFFFFFFC, "I-type load with negative offset");
+
+        // Test 6
+        instr = {12'd8, 13'b0, 7'b0000011};
+        check(32'd8, "I-type load with positive offset");
+
+        // Test 7
+        instr = {12'hABC, 13'b0, 7'b0110011};
+        check(32'b0, "default");
+
+
         if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
         else             $display("%0d/%0d TESTS FAILED", errors, tests);
         $finish;
