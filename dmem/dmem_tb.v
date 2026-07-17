@@ -53,6 +53,7 @@ module dmem_tb;
         else $display ("PASS: first address preserved");
 
         addr = 32'h110;
+        #1;
         if (read_data === 32'hAAAABBBB) $display("PASS: no clobber");
         else $display("FAIL: clobber, got %0h", read_data);
 

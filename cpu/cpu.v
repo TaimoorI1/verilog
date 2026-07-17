@@ -15,6 +15,10 @@ wire [31:0] pc;
 wire reg_write;
 wire alu_src;
 wire [3:0] alu_control;
+wire mem_write; 
+wire [31:0] dmem_read_data;
+wire mem_to_reg;
+
 
 // PC sends byte address to imem, imem outputs the instruction
 fetch fetch_inst (
@@ -36,6 +40,8 @@ decode decode_inst (
     .funct7(funct7)
 );
 
+// mux for wd in regfile
+wire [31:0] wb_data = mem_to_reg ? dmem_read_data : alu_result;
 
 // regfile reads rs1/rs2, outputs rd1, rd2
 regfile regfile_inst (
@@ -43,7 +49,7 @@ regfile regfile_inst (
     .ra1(rs1),
     .ra2(rs2),
     .wa(rd),
-    .wd(alu_result),
+    .wd(wb_data),
     .we(reg_write),
     .rd1(rd1),
     .rd2(rd2)
@@ -71,7 +77,17 @@ control control_inst (
     .funct7_5(funct7[5]),
     .reg_write(reg_write),
     .alu_src(alu_src),
-    .alu_control(alu_control)
+    .alu_control(alu_control),
+    .mem_to_reg(mem_to_reg),
+    .mem_write(mem_write)
+);
+
+dmem dmem_inst (
+    .clk(clk),
+    .addr(alu_result), 
+    .write_data(rd2),
+    .mem_write(mem_write),
+    .read_data(dmem_read_data)
 );
 
 endmodule

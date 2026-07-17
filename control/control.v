@@ -5,13 +5,17 @@ module control (
 
     output reg reg_write,
     output reg alu_src,
-    output reg [3:0] alu_control
+    output reg [3:0] alu_control,
+    output reg mem_to_reg,
+    output reg mem_write
 );
 
 always @(*) begin
     reg_write = 1'b0;
     alu_src = 1'b0;
     alu_control = 4'b0000;
+    mem_to_reg = 1'b0;
+    mem_write = 1'b0;
 
    case (opcode)
         7'b0110011 : begin
@@ -19,7 +23,7 @@ always @(*) begin
             reg_write = 1'b1;
             alu_src = 1'b0;
             case (funct3)
-                3'b000 : alu_control = funct7_5 ? 4'b0001 : 4'b0000; // ADD : SUB
+                3'b000 : alu_control = funct7_5 ? 4'b0001 : 4'b0000; // SUB : ADD
                 3'b111 : alu_control = 4'b0010; // AND 
                 3'b110 : alu_control = 4'b0011; // OR
                 3'b100 : alu_control = 4'b0100; // XOR
@@ -44,9 +48,25 @@ always @(*) begin
                 3'b011 : alu_control = 4'b1100; // SLTIU
             endcase
         end
-   endcase
-   
-end 
 
+        7'b0000011 : begin // lw operations 
+            reg_write = 1'b1;
+            alu_src = 1'b1;
+            mem_write = 1'b0;
+            mem_to_reg = 1'b1;
+            alu_control = 4'b0000;
+        end
+
+        7'b0100011 : begin // sw operations
+            reg_write = 1'b0;
+            alu_src = 1'b1;
+            mem_write = 1'b1;
+            mem_to_reg = 1'b0;
+            alu_control = 4'b0000;
+        end
+
+   endcase
+
+end 
 
 endmodule

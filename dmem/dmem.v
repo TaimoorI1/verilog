@@ -6,11 +6,11 @@ module dmem (
     output [31:0] read_data
 );
 
-    reg [31:0] storage [0:255];
+reg [31:0] storage [0:255];
 
-    assign read_data = storage[addr[9:2]];
+assign read_data = storage[addr[9:2]];
 
-    always @(posedge clk)
-        if (mem_write) storage[addr[9:2]] <= write_data;
+always @(posedge clk)
+    if (mem_write) storage[addr[9:2]] <= write_data;
 
 endmodule
