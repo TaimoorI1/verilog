@@ -10,6 +10,23 @@ module cpu_tb;
     initial clk = 0;
     always #5 clk = ~clk;
 
+    integer errors = 0;
+    integer tests = 0;
+
+    task check(input [31:0] actual, input [31:0] expected, input [127:0] name);
+    begin
+        #1;
+        tests = tests + 1;
+        if (actual !== expected) begin
+            errors = errors + 1;
+            $display("FAIL [%0s]: got %h, expected %h", name, actual, expected);
+        end
+    end
+    endtask
+
+
+
+
     // instr 1 = 32'h00A00093;   addi x1, x0, 10
     // instr 2 = 32'h01400113;   addi x2, x0, 20
     // instr 3 = 32'h01E00193;   addi x3, x0, 30
@@ -29,6 +46,12 @@ module cpu_tb;
     // instr 16 = 32'hFE000AE3   beq  x0,  x0,  loop     # -12
     // done:
     // instr 17 = 32'h06300613   addi x12, x0, 99
+
+    initial begin
+    #100000;
+    $display("TIMEOUT: simulation did not finish");
+    $fatal(1);
+    end
 
 
     initial begin
@@ -57,23 +80,29 @@ module cpu_tb;
 
         repeat(30)@(posedge clk);
 
-        $display("x1 expected 10, actual %0d", dut.regfile_inst.registers[1]);
-        $display("x2 expected 20, actual %0d", dut.regfile_inst.registers[2]);
-        $display("x3 expected 30, actual %0d", dut.regfile_inst.registers[3]);
-        $display("x4 expected 30, actual %0d", dut.regfile_inst.registers[4]);
-        $display("x5 expected 1, actual %0d", dut.regfile_inst.registers[5]);
-        $display("x6 expected -8, actual %0d", $signed(dut.regfile_inst.registers[6]));
-        $display("x7 expected -4, actual %0d", $signed(dut.regfile_inst.registers[7]));
-        $display("mem[20] expected 10, actual %0d", dut.dmem_inst.storage[5]);
-        $display("x8 expected 10, actual %0d", dut.regfile_inst.registers[8]);
-        $display("x9  expected 0,  actual %0d", dut.regfile_inst.registers[9]);
-        $display("x10 expected 30, actual %0d", dut.regfile_inst.registers[10]);
-        $display("x11 expected 0,  actual %0d", dut.regfile_inst.registers[11]);
-        $display("x12 expected 99, actual %0d", dut.regfile_inst.registers[12]);
+        check(dut.regfile_inst.registers[0], 32'd0, "x0 must be 0");
+        check(dut.regfile_inst.registers[1], 32'd10, "addi x1, x0, 10");
+        check(dut.regfile_inst.registers[2], 32'd20, "addi x2, x0, 20");
+        check(dut.regfile_inst.registers[3], 32'd30, "addi x3, x0, 30");
+        check(dut.regfile_inst.registers[4], 32'd30, "xor x4, x1, x2");
+        check(dut.regfile_inst.registers[5], 32'd1, "slt x5, x1, x2");
+        check(dut.regfile_inst.registers[6], 32'hFFFFFFF8, "addi x6, x0, -8");
+        check(dut.regfile_inst.registers[7], 32'hFFFFFFFC, "srai x7, x6, 1");
+        check(dut.dmem_inst.storage[5], 32'd10, "sw x1, 0(x2)");
+        check(dut.regfile_inst.registers[8], 32'd10, "lw x8, 0(x2)");
+        check(dut.regfile_inst.registers[9], 32'd0, "x9 expected 0");
+        check(dut.regfile_inst.registers[10], 32'd30, "x10 expected 30");
+        check(dut.regfile_inst.registers[11], 32'd0, "x11 expected 0");
+        check(dut.regfile_inst.registers[12], 32'd99, "x12 expected 99");
 
     
         $display("PC = %0d", dut.fetch_inst.pc_inst.pc);
 
+        if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
+        else begin
+            $display("%0d/%0d TESTS FAILED", errors, tests);
+            $fatal(1);
+        end
         $finish;
 
     end

@@ -17,6 +17,11 @@ module regfile (
 
     // clocked write port
     always @(posedge clk)
-        if (we) registers[wa] <= wd;
+    if (we && wa != 5'd0)
+        registers[wa] <= wd;
+    
+    initial begin
+        registers[0] = 32'd0;
+    end
 
 endmodule
