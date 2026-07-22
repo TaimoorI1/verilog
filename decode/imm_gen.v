@@ -10,6 +10,7 @@ module imm_gen(
             7'b0010011: out = {{20{instr[31]}}, instr[31:20]};
             7'b0100011: out = {{20{instr[31]}}, instr[31:25], instr[11:7]};
             7'b0000011: out = {{20{instr[31]}}, instr[31:20]};
+            7'b1100011: out = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
             default: out = 32'b0;
         endcase
     end 

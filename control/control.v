@@ -7,7 +7,8 @@ module control (
     output reg alu_src,
     output reg [3:0] alu_control,
     output reg mem_to_reg,
-    output reg mem_write
+    output reg mem_write,
+    output reg branch
 );
 
 always @(*) begin
@@ -16,6 +17,7 @@ always @(*) begin
     alu_control = 4'b0000;
     mem_to_reg = 1'b0;
     mem_write = 1'b0;
+    branch = 1'b0;
 
    case (opcode)
         7'b0110011 : begin
@@ -63,6 +65,15 @@ always @(*) begin
             mem_write = 1'b1;
             mem_to_reg = 1'b0;
             alu_control = 4'b0000;
+        end
+
+        7'b1100011 : begin // B-type operations
+            reg_write = 1'b0;
+            alu_src = 1'b0;
+            mem_write = 1'b0;
+            mem_to_reg = 1'b0;
+            alu_control = 4'b0001;
+            branch = 1'b1;
         end
 
    endcase

@@ -50,6 +50,17 @@ module imm_gen_tb;
         instr = {12'hABC, 13'b0, 7'b0110011};
         check(32'b0, "default");
 
+        // Test 8
+        instr = {1'b0, 6'b000001, 13'b0, 4'b1101, 1'b0, 7'b1100011};
+        check(32'b111010, "B-type positive offset");
+
+        // Test 9
+        instr = {1'b1, 6'b111111, 13'b0, 4'b1000, 1'b1, 7'b1100011};
+        check(32'hFFFFFFF0, "B-type negative offset");
+
+        // Test 9
+        instr = {1'b0, 6'b000000, 13'b0, 4'b0000, 1'b1, 7'b1100011};
+        check(32'h00000800, "B-type imm[11] isolated");
 
         if (errors == 0) $display("ALL %0d TESTS PASSED", tests);
         else             $display("%0d/%0d TESTS FAILED", errors, tests);

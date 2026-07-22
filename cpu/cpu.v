@@ -18,6 +18,10 @@ wire [3:0] alu_control;
 wire mem_write; 
 wire [31:0] dmem_read_data;
 wire mem_to_reg;
+wire zero;
+wire [31:0] branch_target;
+wire take_branch;
+wire branch;
 
 
 // PC sends byte address to imem, imem outputs the instruction
@@ -25,8 +29,13 @@ fetch fetch_inst (
     .clk(clk),
     .reset(reset),
     .pc(pc),
+    .branch_target(branch_target),
+    .take_branch(take_branch),
     .instr(instr)
 );
+
+assign branch_target = pc + imm;
+assign take_branch = branch & zero;
 
 
 // instruction goes to decode, which deconstructs rs1, rs2, rd, imm
@@ -63,7 +72,8 @@ alu alu_inst (
     .a(rd1),
     .b(alu_b),
     .alu_op(alu_control),
-    .result(alu_result)
+    .result(alu_result),
+    .zero(zero)
 );
 
 imm_gen imm_gen_inst (
@@ -79,7 +89,8 @@ control control_inst (
     .alu_src(alu_src),
     .alu_control(alu_control),
     .mem_to_reg(mem_to_reg),
-    .mem_write(mem_write)
+    .mem_write(mem_write),
+    .branch(branch)
 );
 
 dmem dmem_inst (

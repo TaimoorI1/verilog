@@ -1,18 +1,21 @@
 module fetch (
-    input             clk,
-    input             reset,
-    output     [31:0] pc,        // current address (exposed so we can watch it)
-    output     [31:0] instr      // instruction fetched this cycle
+    input  clk,
+    input  reset,
+    input  take_branch,
+    input  [31:0] branch_target,
+    output [31:0] pc,        // current address (exposed so we can watch it)
+    output [31:0] instr      // instruction fetched this cycle
 );
 
     // internal wires: signals that run BETWEEN the bricks
     wire [31:0] pc_plus_4;
+    wire [31:0] next_pc;
 
     // its next_pc input is fed by the adder
     pc pc_inst (
         .clk     (clk),
         .reset   (reset),
-        .next_pc (pc_plus_4),    // next address comes from the adder
+        .next_pc (next_pc),    // next address comes from the adder
         .pc      (pc)
     );
 
@@ -23,5 +26,7 @@ module fetch (
     );
 
     assign pc_plus_4 = pc + 4;
+    assign next_pc = take_branch ? branch_target : pc_plus_4;
+
 
 endmodule
